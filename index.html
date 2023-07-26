@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Погода</title>
+</head>
+<body>
+  <h1>Погода в вашем городе</h1>
+  <div id="weather"></div>
+
+  <script>
+    const apiKey = 'd41847081702dabf7cc643ffbe470deb';
+    const city = 'Нитра'; 
+
+    // Функция для получения погоды
+    async function getWeather() {
+      try {
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`);
+        const data = await response.json();
+        displayWeather(data);
+      } catch (error) {
+        console.error('Ошибка получения данных о погоде:', error);
+      }
+    }
+
+    // Функция для вывода погоды на страницу
+    function displayWeather(data) {
+      const weatherDiv = document.getElementById('weather');
+
+      // Проверка наличия данных о погоде
+      if (data.cod === 200) {
+        const cityName = data.name;
+        const temperature = data.main.temp;
+        const weatherDescription = data.weather[0].description;
+
+        weatherDiv.innerHTML = `
+          <p><b>Город:</b> ${cityName}</p>
+          <p><b>Температура:</b> ${temperature} °C</p>
+          <p><b>Описание погоды:</b> ${weatherDescription}</p>
+        `;
+      } else {
+        weatherDiv.innerHTML = `<p>Не удалось получить данные о погоде для города ${city}.</p>`;
+      }
+    }
+
+
+    getWeather();
+  </script>
+</body>
+</html>
